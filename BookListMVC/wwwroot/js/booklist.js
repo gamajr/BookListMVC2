@@ -19,12 +19,12 @@ function loadDataTable() {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text -center">
-                        <a href="/tblbooks/Upsert?id=${data}" class='btn btn-success text-white' style='cursor:pointer; width:100px;'>
+                        <a href="/tblbooks/upsert?id=${data}" class='btn btn-success text-white' style='cursor:pointer; width:100px;'>
                             Edit
                         </a>
                         &nbsp;
                         <a class='btn btn-danger text-white' style='cursor:pointer; width:100px;'
-                            onClick=Delete('/TblBooks/Delete?id='+${data})>
+                            onClick=Delete('/tblbooks/delete?id='+${data})>
                             Delete
                         </a>
                         </div>`;

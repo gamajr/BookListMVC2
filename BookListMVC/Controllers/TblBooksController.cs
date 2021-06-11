@@ -12,6 +12,9 @@ namespace BookListMVC.Controllers
     {
         private readonly LibraryDBContext _db;
 
+        [BindProperty]
+        public TblBooks Book { get; set; }
+
         public TblBooksController(LibraryDBContext db)
         {
             _db = db;
@@ -20,9 +23,45 @@ namespace BookListMVC.Controllers
         {
             return View();
         }
+
+        public IActionResult Upsert(uint? id)
+        {
+            Book = new TblBooks();
+            if (id == null)
+            {
+                return View(Book);
+            }
+
+            Book = _db.TblBooks.FirstOrDefault(u=>u.Id==id);
+            if (Book == null)
+            {
+                return NotFound();
+            }
+            return View(Book);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert()
+        {
+            if (ModelState.IsValid)
+            {
+                if(Book.Id == 0){
+                    //create
+                    _db.TblBooks.Add(Book);
+
+                }
+                else
+                {
+                    _db.TblBooks.Update(Book);
+                }
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(Book);
+        }
         #region API Calls
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(uint id)
         {
             var bookFromDB = await _db.TblBooks.FirstOrDefaultAsync(u => u.Id == id);
             if (bookFromDB == null)
